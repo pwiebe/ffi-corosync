@@ -5,7 +5,7 @@ require 'ffi-corosync/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "ffi-corosync"
-  spec.version       = Ffi::Corosync::VERSION
+  spec.version       = Corosync::VERSION
   spec.authors       = ["Philip Wiebe"]
   spec.email         = ["pwiebe_99@yahoo.com"]
   spec.description   = %q{A Ruby interface to the Corosync library}
