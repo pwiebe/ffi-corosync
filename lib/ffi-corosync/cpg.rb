@@ -1,6 +1,8 @@
 module Corosync
   class Cpg
 
+    attr_accessor :handle_ptr, :handle
+
     # TODO: ObjectSpace.finalizer( LibCorosync.finalize(@handle) )
 
     def initialize(deliver_cb, confchg_cb)
@@ -37,13 +39,18 @@ module Corosync
 
       ret = LibCorosync.cpg_initialize(@handle_ptr, @callbacks)
       puts "#{self.class}: ret=#{ret}  #{@handle_ptr}"
+@handle = @handle_ptr.read_uint64
       self
     end
 
     def join(name)
       #cpg_name =  FFI::MemoryPointer.new(name.length)
       #cpg_name.put_string(0, name)
-      cpg_name =  FFI::MemoryPointer.from_string(name)
+      #cpg_name =  FFI::MemoryPointer.from_string(name)
+      cpg_name = LibCorosync::CpgName.new
+cpg_name[:length] = name.size
+cpg_name[:value] = name
+puts "cpg_name: #{cpg_name.inspect}"
       ret = LibCorosync.cpg_join(@handle, cpg_name)
       ret
     end
@@ -51,7 +58,11 @@ module Corosync
     def leave(name)
       #cpg_name =  FFI::MemoryPointer.new(name.length)
       #cpg_name.put_string(0, name)
-      cpg_name =  FFI::MemoryPointer.from_string(name)
+      #cpg_name =  FFI::MemoryPointer.from_string(name)
+      cpg_name = LibCorosync::CpgName.new
+cpg_name[:length] = name.size
+cpg_name[:value] = name
+puts "cpg_name: #{cpg_name.inspect}"
       ret = LibCorosync.cpg_leave(@handle, cpg_name)
       ret
     end
